@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { handleSuccess, handleError } from "../utils";
 
@@ -9,7 +9,9 @@ function Signup() {
     email: "",
     password: "",
   };
+
   const [info, setInfo] = useState(initialState);
+  const navigate = useNavigate();
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
@@ -27,7 +29,6 @@ function Signup() {
     }
 
     try {
-        
       const url = "http://localhost:3000/auth/register";
       const response = await fetch(url, {
         method: "POST",
@@ -42,9 +43,17 @@ function Signup() {
         handleError("Failed to sign up");
       }
 
-      setInfo(initialState);
-      handleSuccess("Signup successful");
+      const { success, message,error } = result;
+      if (!success) {
+        return handleError(`${error.details}`);
+      }
 
+      setInfo(initialState);
+      handleSuccess(`${message}`);
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error: any) {
       handleError(error.message);
     }
@@ -86,7 +95,7 @@ function Signup() {
           />
         </div>
 
-        <button>Sign Up</button>
+        <button type="submit">Sign Up</button>
         <span>
           Already have an account?
           <Link to="/login">Login</Link>
