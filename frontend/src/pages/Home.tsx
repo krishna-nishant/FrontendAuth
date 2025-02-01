@@ -22,7 +22,7 @@ function Home() {
   };
 
   async function fetchProducts() {
-    const url = "http://localhost:3000/products/get";
+    const url = "https://frontend-auth-lime.vercel.app/products/get";
     const token = localStorage.getItem("token");
 
     const response = await fetch(url, {
